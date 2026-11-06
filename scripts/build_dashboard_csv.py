@@ -9,6 +9,7 @@ import csv
 from pathlib import Path
 
 DATA = Path(__file__).resolve().parent.parent / "data"
+BMR = 1245  # InBody
 K = 0.85  # same correction as build_energy_csv.py
 
 
@@ -50,6 +51,7 @@ for r in rows("energy_daily.csv"):
     x = daily.setdefault(r["date"], {"date": r["date"]})
     for k in ("spent", "active_adj", "tef", "plan", "eaten"):
         x[k] = r.get(k, "")
+    x["basal"] = BMR
 
 for r in rows("sleep_summaries.csv"):
     x = daily.setdefault(r["date"], {"date": r["date"]})
@@ -82,7 +84,7 @@ if wrows:
                 break
 
 fields = ["date", "steps", "step_goal", "resting_hr", "stress_avg", "bb_max", "bb_min", "bb_charged", "bb_drained",
-          "intensity_min", "active_kcal", "spent", "active_adj", "tef", "plan", "eaten",
+          "intensity_min", "active_kcal", "basal", "active_adj", "tef", "spent", "plan", "eaten",
           "sleep_h", "deep_h", "light_h", "rem_h", "awake_h", "sleep_score", "sleep_hr",
           "hrv", "hrv_week", "hrv_status", "hrv_low", "hrv_high", "weight"]
 with (DATA / "dash_daily.csv").open("w", newline="", encoding="utf-8") as f:
