@@ -17,7 +17,7 @@ DATA = Path(__file__).resolve().parent.parent / "data"
 BMR = 1245
 K = 0.85  # correction of Garmin active calories; recalibrate after 4 weeks from weight trend
 TEF_SHARE = 0.10
-PLAN = {0: 1750, 1: 1650, 2: 1750, 3: 1750, 4: 1650, 5: 1750, 6: 1650}  # Mon..Sun
+PLAN = {0: 1750, 1: 1650, 2: 1650, 3: 1750, 4: 1650, 5: 1750, 6: 1650}  # Mon..Sun
 
 eaten = {}
 nut = DATA / "nutrition.csv"
