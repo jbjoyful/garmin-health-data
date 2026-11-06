@@ -107,9 +107,10 @@ def merge_csv(name, rows):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--days", type=int, default=3, help="how many days back to (re)fetch, ending yesterday")
+    ap.add_argument("--weight-only", action="store_true", help="fetch only weigh-ins, through today (midday run)")
     args = ap.parse_args()
 
-    end = datetime.now(TZ).date() - timedelta(days=1)
+    end = datetime.now(TZ).date() - (timedelta(days=0) if args.weight_only else timedelta(days=1))
     start = end - timedelta(days=args.days - 1)
     s, e = start.isoformat(), end.isoformat()
     stamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -123,6 +124,25 @@ def main():
         log_rows.append([stamp, cmd, key, rc, len(out), err.strip().replace("\n", " ")[:300]])
         if rc != 0 and critical:
             failed_critical.append(cmd)
+
+    if args.weight_only:
+        start = end - timedelta(days=6)
+        s = start.isoformat()
+        rc, out, err = run(["weight-measurements", "--start-date", s, "--end-date", e])
+        record("weight-measurements", f"{s}_{e}", rc, out, err, True)
+        if rc == 0:
+            try:
+                merge_csv("weight_measurements", find_rows(json.loads(out)))
+            except Exception as ex:
+                log_rows.append([stamp, "weight-measurements", "csv-merge", 1, 0, repr(ex)[:300]])
+        logp = DATA / "runs.csv"
+        with logp.open("a", newline="", encoding="utf-8") as f:
+            csv.writer(f).writerows(log_rows)
+        if failed_critical:
+            print("weight fetch failed", file=sys.stderr)
+            sys.exit(1)
+        print(f"OK weight {s}..{e}")
+        return
 
     for cmd, critical in RANGE_CMDS.items():
         rc, out, err = run([cmd, "--start-date", s, "--end-date", e])

@@ -3,6 +3,7 @@ name: fetch-garmin
 on:
   schedule:
     - cron: "0 6 * * *"   # 06:00 UTC = 07:00 Amsterdam in winter, 08:00 in summer
+    - cron: "0 10 * * *"  # 10:00 UTC = 11:00 Amsterdam in winter (12:00 in summer): weigh-ins only
   workflow_dispatch:
     inputs:
       days:
@@ -31,7 +32,12 @@ jobs:
         id: fetch
         env:
           GARMIN_PERSONAL_API_KEY: ${{ secrets.GARMIN_PERSONAL_API_KEY }}
-        run: python scripts/fetch.py --days "${{ github.event.inputs.days || '3' }}"
+        run: |
+          if [ "${{ github.event.schedule }}" = "0 10 * * *" ]; then
+            python scripts/fetch.py --weight-only
+          else
+            python scripts/fetch.py --days "${{ github.event.inputs.days || '3' }}"
+          fi
         continue-on-error: true
       - name: Commit data
         run: |
