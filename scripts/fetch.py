@@ -172,6 +172,25 @@ def main():
             record(cmd, d.isoformat(), rc, out, err, critical)
         d += timedelta(days=1)
 
+    # cycle phase (used only for interpreting weight, energy and recovery trends)
+    cycle_rows = []
+    d = start
+    while d <= end:
+        rc, out, err = run(["menstrual-cycle-day-view", "--date", d.isoformat()])
+        record("menstrual-cycle-day-view", d.isoformat(), rc, out, err, False)
+        if rc == 0:
+            try:
+                ds = (json.loads(out) or {}).get("daySummary") or {}
+                if ds:
+                    row = {"date": d.isoformat()}
+                    row.update(ds)
+                    cycle_rows.append(row)
+            except Exception as ex:
+                log_rows.append([stamp, "menstrual-cycle-day-view", "parse", 1, 0, repr(ex)[:300]])
+        d += timedelta(days=1)
+    if cycle_rows:
+        merge_csv("cycle", cycle_rows)
+
     logp = DATA / "runs.csv"
     new = not logp.exists()
     with logp.open("a", newline="", encoding="utf-8") as f:
