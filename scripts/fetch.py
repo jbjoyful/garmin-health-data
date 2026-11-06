@@ -172,9 +172,6 @@ def main():
             record(cmd, d.isoformat(), rc, out, err, critical)
         d += timedelta(days=1)
 
-    rc, out, err = run(["menstrual-cycle-day-view", "--date", e])
-    record("menstrual-cycle-day-view", e, rc, out, err, False)
-
     logp = DATA / "runs.csv"
     new = not logp.exists()
     with logp.open("a", newline="", encoding="utf-8") as f:
