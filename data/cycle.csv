@@ -1,0 +1,4 @@
+date,currentPhase,cycleType,dayInCycle,educationContentMod,predictedCycle,predictedCycleLength,startDate
+2026-11-04,2,REGULAR,7,3,False,28,2026-10-29
+2026-11-05,2,REGULAR,8,3,False,28,2026-10-29
+2026-11-06,2,REGULAR,9,3,False,28,2026-10-29

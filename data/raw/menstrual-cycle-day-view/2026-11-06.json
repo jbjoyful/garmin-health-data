@@ -1,0 +1,12 @@
+{
+  "dayLog": null,
+  "daySummary": {
+    "currentPhase": 2,
+    "cycleType": "REGULAR",
+    "dayInCycle": 9,
+    "educationContentMod": 3,
+    "predictedCycle": false,
+    "predictedCycleLength": 28,
+    "startDate": "2026-10-29"
+  }
+}

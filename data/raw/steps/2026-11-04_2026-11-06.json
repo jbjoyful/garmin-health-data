@@ -1,0 +1,20 @@
+[
+  {
+    "calendarDate": "2026-11-04",
+    "stepGoal": 9000,
+    "totalDistance": 4825,
+    "totalSteps": 6907
+  },
+  {
+    "calendarDate": "2026-11-05",
+    "stepGoal": 9000,
+    "totalDistance": 3962,
+    "totalSteps": 5672
+  },
+  {
+    "calendarDate": "2026-11-06",
+    "stepGoal": 9000,
+    "totalDistance": 3358,
+    "totalSteps": 4769
+  }
+]
